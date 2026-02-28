@@ -1,0 +1,12 @@
+set $mode_vpn "<span foreground='$color10'>🌍</span>  \
+<span foreground='$color5'><b>eternal</b></span> <span foreground='$color10'>(<b>e</b>)</span> \
+<span foreground='$color5'><b>devment</b></span> <span foreground='$color10'>(<b>d</b>)</span>"
+
+mode --pango_markup $mode_vpn {
+    bindsym e mode "default", exec $enable_eternal
+    bindsym d mode "default", exec $enable_devment
+
+    bindsym Escape mode "default"
+}
+
+bindsym $mod+v mode $mode_vpn

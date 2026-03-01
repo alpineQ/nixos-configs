@@ -16,8 +16,8 @@ mkfs.ext4 -L nixos /dev/vda2
 # Mount target
 mkdir -p "$ROOT"
 mount /dev/vda2 "$ROOT"
-mkdir -p "$ROOT/boot"
-mount /dev/vda1 "$ROOT/boot"
+mkdir -p "$ROOT/boot/efi"
+mount /dev/vda1 "$ROOT/boot/efi"
 
 # Generate hardware config with correct VM UUIDs
 nixos-generate-config --root "$ROOT"

@@ -15,9 +15,11 @@
         efiInstallAsRemovable = false;
         device = "nodev";
         useOSProber = true;
-        configurationLimit = 3;
       };
-      efi.canTouchEfiVariables = true;
+      efi = {
+        canTouchEfiVariables = true;
+        efiSysMountPoint = "/boot/efi";
+      };
     };
 
     kernelParams = [
@@ -307,6 +309,7 @@
       gcc
       tree-sitter
       clang
+      clang-tools
       nodejs
       github-cli
       lazygit

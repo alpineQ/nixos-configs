@@ -15,7 +15,7 @@
         efiSupport = true;
         efiInstallAsRemovable = false;
         device = "nodev";
-        useOSProber = true;
+        useOSProber = false;
       };
       efi = {
         canTouchEfiVariables = true;

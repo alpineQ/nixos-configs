@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 MONITOR_OUTPUT=$(swaymsg -t get_outputs | jq -r 'first(.[] | select(.model == "27B2G5")) | .name')
 TV_OUTPUT=$(swaymsg -t get_outputs | jq -r 'first(.[] | select(.model == "Beyond TV")) | .name')

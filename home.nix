@@ -10,7 +10,7 @@
     file.".local/bin/sync-audio-volumes.sh" = {
       executable = true;
       text = ''
-        #!/bin/bash
+        #!/usr/bin/env bash
         pactl subscribe | grep --line-buffered "sink #" | while read -r event; do
             sink_vol=$(pactl get-sink-volume @DEFAULT_SINK@ | head -1 | awk '{print $5}')
             pactl list short sink-inputs | while read -r input; do
@@ -319,6 +319,7 @@
         };
         Service = {
           Type = "simple";
+          Environment = "PATH=/run/current-system/sw/bin";
           ExecStart = "%h/.local/bin/sync-audio-volumes.sh";
           Restart = "on-failure";
           RestartSec = 5;

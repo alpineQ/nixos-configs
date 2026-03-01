@@ -3,6 +3,7 @@
 {
   imports = [
     ./hardware-configuration.nix
+    ./pc.nix
     "${builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/release-25.11.tar.gz"}/nixos"
   ];
 
@@ -15,20 +16,6 @@
         efiInstallAsRemovable = false;
         device = "nodev";
         useOSProber = true;
-        extraInstallCommands = ''
-          ${pkgs.coreutils}/bin/cp -r /etc/grub/efi-Microsoft /boot/efi/EFI/Microsoft
-        '';
-        extraEntries = ''
-          menuentry "Gentoo Linux" {
-            search --no-floppy --fs-uuid --set=root 1ddfe806-480f-4799-9f8f-a5e8fb376b8f
-            linux /boot/vmlinuz-6.12.58-gentoo-x86_64 root=UUID=1ddfe806-480f-4799-9f8f-a5e8fb376b8f ro quiet
-            initrd /boot/initramfs-6.12.58-gentoo-x86_64.img
-          }
-          menuentry "Windows 11" {
-            search --no-floppy --fs-uuid --set=root AE65-4697
-            chainloader /EFI/Microsoft/Boot/bootmgfw.efi
-          }
-        '';
       };
       efi = {
         canTouchEfiVariables = true;
@@ -43,27 +30,9 @@
     ];
 
     # Modules matching your Gentoo kernel config
-    kernelModules = [
-      "kvm-amd"
-      "vfio"
-      "vfio_iommu_type1"
-      "vfio_pci"
-      "vfio_virqfd"
-      "br_netfilter"
-      "v4l2loopback"
-      "snd-aloop"
-      "nct6683"
-    ];
-
     extraModulePackages = with config.boot.kernelPackages; [
       v4l2loopback
     ];
-
-    # 24G tmpfs for /tmp (matches your fstab)
-    tmp = {
-      useTmpfs = true;
-      tmpfsSize = "24G";
-    };
 
     kernel.sysctl = {
       "net.ipv4.ip_forward" = 1;
@@ -76,7 +45,6 @@
 
   # ── Networking ────────────────────────────────────────────────────────
   networking = {
-    hostName = "pc";
     firewall.enable = false; # Docker manages its own iptables
     networkmanager = {
       enable = true;
@@ -120,8 +88,6 @@
   # ── Nix settings ─────────────────────────────────────────────────────
   nix.settings = {
     experimental-features = [ "nix-command" "flakes" ];
-    max-jobs = 16;
-    cores = 32;
   };
 
   nixpkgs.config.allowUnfree = true;
@@ -131,10 +97,6 @@
     graphics = {
       enable = true;
       enable32Bit = true;
-      extraPackages = with pkgs; [
-        rocmPackages.clr
-        rocmPackages.clr.icd
-      ];
     };
 
     bluetooth = {

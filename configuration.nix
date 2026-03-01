@@ -238,8 +238,6 @@
         cliphist
         imv
         swayimg
-        playerctl
-        pulsemixer
       ];
     };
 
@@ -342,6 +340,7 @@
 
       # 3D printing / CAD
       openscad
+      bambu-studio
 
       # Office / productivity
       libreoffice-qt
@@ -392,6 +391,7 @@
       bluetuith
 
       # Audio
+      pulseaudio
       pulsemixer
       playerctl
       (python3.withPackages (ps: [ ps.requests ]))

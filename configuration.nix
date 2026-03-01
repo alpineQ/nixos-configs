@@ -317,6 +317,7 @@
       (import (fetchTarball "https://nixos.org/channels/nixos-unstable/nixexprs.tar.xz") { config.allowUnfree = true; }).claude-code
       lmstudio
       go
+      gopls
 
       # Containers / VM
       qemu_full
@@ -344,7 +345,10 @@
       (pkgs.appimageTools.wrapType2 {
          pname = "bambu-studio";
          version = "PR-9540";
-         src = /home/alpineq/.local/bin/bambu-studio;
+         src = pkgs.fetchurl {
+           url = "https://github.com/bambulab/BambuStudio/releases/download/v02.05.00.67/Bambu_Studio_ubuntu-24.04_PR-9540.AppImage";
+           hash = "sha256-3ubZblrsOJzz1p34QiiwiagKaB7nI8xDeadFWHBkWfg=";
+         };
          extraPkgs = pkgs: [ pkgs.webkitgtk_4_1 ];
       })
 

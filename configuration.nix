@@ -15,6 +15,7 @@
         efiInstallAsRemovable = false;
         device = "nodev";
         useOSProber = true;
+        configurationLimit = 3;
       };
       efi.canTouchEfiVariables = true;
     };
@@ -56,14 +57,6 @@
       "kernel.perf_event_paranoid" = 1;
     };
   };
-
-  # Filesystem and swap are defined in hardware-configuration.nix
-  # When installing on real hardware, add your data drive:
-  # fileSystems."/mnt/data4" = {
-  #   device = "/dev/disk/by-label/DATA4";
-  #   fsType = "exfat";
-  #   options = [ "defaults" "uid=1000" "gid=1000" ];
-  # };
 
   # ── Networking ────────────────────────────────────────────────────────
   networking = {
@@ -287,6 +280,7 @@
       # Dev tools
       rustup
       gcc
+      tree-sitter
       clang
       nodejs
       github-cli
@@ -295,6 +289,7 @@
       perf
       luarocks
       lua54Packages.lua-cjson
+      (import (fetchTarball "https://nixos.org/channels/nixos-unstable/nixexprs.tar.xz") { config.allowUnfree = true; }).claude-code
 
       # Containers / VM
       qemu_full
@@ -335,13 +330,6 @@
       file-roller
       zenity
       xdg-user-dirs
-
-      # Fonts
-      nerd-fonts.jetbrains-mono
-      nerd-fonts.fira-code
-      font-awesome
-      roboto
-      noto-fonts-color-emoji
 
       # Themes
       dracula-theme       # GTK theme
@@ -398,6 +386,7 @@
       nerd-fonts.fira-code
       font-awesome
       roboto
+      roboto-mono
       noto-fonts-color-emoji
     ];
     fontconfig.defaultFonts = {

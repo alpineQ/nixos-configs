@@ -225,10 +225,7 @@
 
     fish.enable = true;
 
-    neovim = {
-      enable = true;
-      defaultEditor = true;
-    };
+    nix-ld.enable = true;
 
     git.enable = true;
   };
@@ -264,7 +261,6 @@
   environment = {
     systemPackages = with pkgs; [
       # Editors
-      (runCommand "vim-symlink" {} ''mkdir -p $out/bin && ln -s ${neovim}/bin/nvim $out/bin/vim'')
       vscode
 
       # Shells / terminal tools
@@ -275,6 +271,7 @@
       htop
       nvtopPackages.amd
       fd
+      ripgrep
       jq
       tree
       progress

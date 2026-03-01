@@ -1,5 +1,22 @@
 { config, pkgs, lib, ... }:
 
+let
+  tree-sitter-vim-fixed = pkgs.tree-sitter-grammars.tree-sitter-vim.overrideAttrs {
+    version = "0.8.1";
+    src = pkgs.fetchFromGitHub {
+      owner = "tree-sitter-grammars";
+      repo = "tree-sitter-vim";
+      tag = "v0.8.1";
+      hash = "sha256-MnLBFuJCJbetcS07fG5fkCwHtf/EcNP+Syf0Gn0K39c=";
+    };
+  };
+
+  # Build a vim grammar plugin from the fixed grammar, matching how nixpkgs does it
+  vim-grammar-plugin = pkgs.runCommand "vim-grammar-fixed" {} ''
+    mkdir -p $out/parser
+    ln -s ${tree-sitter-vim-fixed}/parser $out/parser/vim.so
+  '';
+in
 {
   home = {
     stateVersion = "25.11";
@@ -112,6 +129,21 @@
       "waybar/style.css".source = ./dotfiles/waybar/style.css;
       "waybar/weather.cfg".source = ./dotfiles/waybar/weather.cfg;
 
+      # Neovim
+      "nvim/lua".source = ./dotfiles/nvim/lua;
+      "nvim/parser".source =
+        let
+          parsers = pkgs.symlinkJoin {
+            name = "treesitter-parsers";
+            paths = (pkgs.vimPlugins.nvim-treesitter.withPlugins (p: with p; [
+              bash c cpp css diff go html javascript json lua luadoc
+              markdown markdown-inline nix python query regex rust
+              toml tsx typescript vimdoc xml yaml
+            ])).dependencies ++ [ vim-grammar-plugin ];
+          };
+        in
+        "${parsers}/parser";
+
       # Foot
       "foot/foot.ini".source = ./dotfiles/foot/foot.ini;
 
@@ -144,6 +176,119 @@
         "x-scheme-handler/about" = "firefox.desktop";
       };
     };
+  };
+
+  # ── Neovim / LazyVim ────────────────────────────────────────────────
+  programs.neovim = {
+    enable = true;
+    defaultEditor = true;
+    vimAlias = true;
+
+    extraPackages = with pkgs; [
+      # LSPs
+      lua-language-server
+      nil
+      gopls
+      nodePackages.typescript-language-server
+
+      # Formatters
+      stylua
+    ];
+
+    plugins = with pkgs.vimPlugins; [
+      lazy-nvim
+    ];
+
+    extraLuaConfig =
+      let
+        plugins = with pkgs.vimPlugins; [
+          # Core
+          LazyVim
+
+          # UI
+          snacks-nvim
+          bufferline-nvim
+          lualine-nvim
+          mini-icons
+          nvim-web-devicons
+          noice-nvim
+          nui-nvim
+          nvim-notify
+          dashboard-nvim
+          dressing-nvim
+          indent-blankline-nvim
+          which-key-nvim
+
+          # Editor
+          neo-tree-nvim
+          gitsigns-nvim
+          flash-nvim
+          todo-comments-nvim
+          trouble-nvim
+          vim-illuminate
+
+          # Coding
+          blink-cmp
+          friendly-snippets
+          nvim-lspconfig
+          conform-nvim
+          nvim-lint
+          lazydev-nvim
+          mini-pairs
+          mini-ai
+          mini-surround
+          ts-comments-nvim
+
+          # Treesitter
+          (pkgs.vimPlugins.nvim-treesitter.withPlugins (p: with p; [
+            bash c cpp css diff go html javascript json lua luadoc
+            markdown markdown-inline nix python query regex rust
+            toml tsx typescript vimdoc xml yaml
+          ]))
+          nvim-treesitter-textobjects
+          nvim-ts-autotag
+
+          # Telescope
+          telescope-nvim
+          telescope-fzf-native-nvim
+
+          # Colorschemes
+          tokyonight-nvim
+          catppuccin-nvim
+
+          # Misc
+          plenary-nvim
+          persistence-nvim
+          vim-startuptime
+        ];
+        mkEntryFromDrv = drv:
+          if lib.isDerivation drv then
+            { name = "${lib.getName drv}"; path = drv; }
+          else
+            drv;
+        lazyPath = pkgs.linkFarm "lazy-plugins" (builtins.map mkEntryFromDrv plugins);
+      in
+      ''
+        require("lazy").setup({
+          dev = {
+            path = "${lazyPath}",
+            patterns = { "" },
+            fallback = true,
+          },
+          spec = {
+            { "LazyVim/LazyVim", import = "lazyvim.plugins" },
+            { import = "plugins" },
+          },
+          performance = {
+            reset_packpath = false,
+            rtp = {
+              disabled_plugins = {
+                "gzip", "tarPlugin", "tohtml", "tutor", "zipPlugin",
+              },
+            },
+          },
+        })
+      '';
   };
 
   # ── Fish shell ──────────────────────────────────────────────────────

@@ -1,0 +1,2 @@
+-- LazyVim options
+-- https://www.lazyvim.org/configuration/general

@@ -280,12 +280,9 @@
 
   # ── Environment ─────────────────────────────────────────────────────
   environment = {
-    shellAliases = {
-      vim = "nvim";
-    };
-
     systemPackages = with pkgs; [
       # Editors
+      (runCommand "vim-symlink" {} ''mkdir -p $out/bin && ln -s ${neovim}/bin/nvim $out/bin/vim'')
       vscode
 
       # Shells / terminal tools
@@ -340,7 +337,12 @@
 
       # 3D printing / CAD
       openscad
-      bambu-studio
+      (pkgs.appimageTools.wrapType2 {
+         pname = "bambu-studio";
+         version = "PR-9540";
+         src = /home/alpineq/.local/bin/bambu-studio;
+         extraPkgs = pkgs: [ pkgs.webkitgtk_4_1 ];
+      })
 
       # Office / productivity
       libreoffice-qt
@@ -378,6 +380,8 @@
       mtpfs
       fuse
       lvm2
+      appimage-run
+      file
 
       # Android
       android-tools

@@ -24,6 +24,8 @@ output $tv_output mode 3840x2160 pos 1920 0 scale 3 disable
 default_border pixel 1
 hide_edge_borders smart
 
+seat * xcursor_theme Dracula-cursors 24
+
 ### Input configuration
 #
 # swaymsg -t get_inputs

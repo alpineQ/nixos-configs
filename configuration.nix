@@ -68,6 +68,21 @@
         networkmanager-openvpn
       ];
     };
+
+    extraHosts = ''
+      # LOCAL
+      10.27.0.7       kafka
+
+      # DEVMENT
+      10.30.0.8       src.devment.tech
+      10.30.0.1       athens.devment.tech
+      10.30.0.1       bitwarden.devment.tech
+      10.30.0.1       static.devment.tech
+
+      # DEHOX
+      10.84.0.100     src.dehox.com
+      10.84.0.1       files.dehox.com
+    '';
   };
 
   # ── Time / Locale ────────────────────────────────────────────────────
@@ -165,6 +180,11 @@
       package = pkgs.plocate;
     };
 
+    openvpn.servers = {
+      dehox.config = "config /etc/openvpn/dehox.ovpn";
+      devment.config = "config /etc/openvpn/devment.ovpn";
+    };
+
     udev.extraRules = ''
       # Disable USB wake for specific devices
       ACTION=="add", ATTRS{devpath}=="6", ATTR{power/wakeup}="disabled"
@@ -241,10 +261,13 @@
   };
 
   # ── Users ────────────────────────────────────────────────────────────
+  users.groups.alpineq.gid = 1000;
+
   users.users.alpineq = {
     isNormalUser = true;
     home = "/home/alpineq";
     shell = pkgs.fish;
+    group = "alpineq";
     extraGroups = [
       "wheel"
       "video"
@@ -259,9 +282,12 @@
 
   # ── Environment ─────────────────────────────────────────────────────
   environment = {
+    shellAliases = {
+      vim = "nvim";
+    };
+
     systemPackages = with pkgs; [
       # Editors
-      vim
       vscode
 
       # Shells / terminal tools
@@ -290,6 +316,8 @@
       luarocks
       lua54Packages.lua-cjson
       (import (fetchTarball "https://nixos.org/channels/nixos-unstable/nixexprs.tar.xz") { config.allowUnfree = true; }).claude-code
+      lmstudio
+      go
 
       # Containers / VM
       qemu_full
@@ -314,7 +342,6 @@
 
       # 3D printing / CAD
       openscad
-      prusa-slicer
 
       # Office / productivity
       libreoffice-qt
@@ -335,6 +362,7 @@
       dracula-theme       # GTK theme
       dracula-icon-theme
       libsForQt5.qtstyleplugin-kvantum
+      kdePackages.qtstyleplugin-kvantum  # Qt6
 
       # GPU / compute
       rocmPackages.rocm-smi
@@ -375,7 +403,16 @@
       SDL_VIDEODRIVER = "wayland";
       XDG_SESSION_TYPE = "wayland";
       XDG_CURRENT_DESKTOP = "sway";
+      XCURSOR_THEME = "Dracula-cursors";
+      XCURSOR_SIZE = "24";
     };
+  };
+
+  # ── Qt theming ───────────────────────────────────────────────────────
+  qt = {
+    enable = true;
+    platformTheme = "qt5ct";
+    style = "kvantum";
   };
 
   # ── Fonts ────────────────────────────────────────────────────────────

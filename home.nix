@@ -311,32 +311,6 @@
         Install.WantedBy = [ "sway-session.target" ];
       };
 
-      dehox = {
-        Unit = {
-          Description = "Dehox OpenVPN";
-          After = [ "network.target" ];
-        };
-        Service = {
-          Type = "simple";
-          ExecStart = "${pkgs.openvpn}/bin/openvpn /etc/openvpn/dehox.ovpn";
-          SyslogIdentifier = "dehox";
-        };
-        Install.WantedBy = [ "sway-session.target" ];
-      };
-
-      devment = {
-        Unit = {
-          Description = "Devment OpenVPN";
-          After = [ "network.target" ];
-        };
-        Service = {
-          Type = "simple";
-          ExecStart = "${pkgs.openvpn}/bin/openvpn /etc/openvpn/devment.ovpn";
-          SyslogIdentifier = "devment";
-        };
-        Install.WantedBy = [ "sway-session.target" ];
-      };
-
       sync-audio-volumes = {
         Unit = {
           Description = "Sync audio device volume to application volumes";

@@ -92,6 +92,7 @@
 
   nixpkgs.config.allowUnfree = true;
 
+
   # ── Hardware ──────────────────────────────────────────────────────────
   hardware = {
     graphics = {
@@ -162,11 +163,6 @@
       package = pkgs.plocate;
     };
 
-    openvpn.servers = {
-      dehox.config = "config /etc/openvpn/dehox.ovpn";
-      devment.config = "config /etc/openvpn/devment.ovpn";
-    };
-
     udev.extraRules = ''
       # Disable USB wake for specific devices
       ACTION=="add", ATTRS{devpath}=="6", ATTR{power/wakeup}="disabled"
@@ -235,6 +231,12 @@
     rtkit.enable = true;
     sudo.enable = true;
     polkit.enable = true;
+    wrappers.openvpn = {
+      source = "${pkgs.openvpn}/bin/openvpn";
+      capabilities = "cap_net_admin+ep";
+      owner = "root";
+      group = "root";
+    };
   };
 
   # ── Users ────────────────────────────────────────────────────────────
@@ -294,6 +296,7 @@
       lmstudio
       go
       gopls
+      sqlite
 
       # Containers / VM
       qemu_full

@@ -16,6 +16,9 @@ let
     mkdir -p $out/parser
     ln -s ${tree-sitter-vim-fixed}/parser $out/parser/vim.so
   '';
+
+  isNixOS = builtins.pathExists /etc/NIXOS;
+  openvpnBin = if isNixOS then "/run/wrappers/bin/openvpn" else "/usr/sbin/openvpn";
 in
 {
   home = {
@@ -52,7 +55,7 @@ in
             waybar-signal idle
         }
 
-        case $1''' in
+        case $1 in
         'interactive')
             MINUTES=$(echo -e "1\n10\n15\n20\n30\n45\n60\n90\n120\nUnlimited" | rofi -dmenu -p "Select how many minutes to inhibit idle:")
             if [ "$MINUTES" = "Unlimited" ]; then
@@ -170,10 +173,10 @@ in
         "image/bmp" = "imv.desktop";
         "x-scheme-handler/tg" = "org.telegram.desktop.desktop";
         "x-scheme-handler/tonsite" = "org.telegram.desktop.desktop";
-        "text/html" = "firefox.desktop";
-        "x-scheme-handler/http" = "firefox.desktop";
-        "x-scheme-handler/https" = "firefox.desktop";
-        "x-scheme-handler/about" = "firefox.desktop";
+        "text/html" = [ "firefox.desktop" "firefox-bin.desktop" ];
+        "x-scheme-handler/http" = [ "firefox.desktop" "firefox-bin.desktop" ];
+        "x-scheme-handler/https" = [ "firefox.desktop" "firefox-bin.desktop" ];
+        "x-scheme-handler/about" = [ "firefox.desktop" "firefox-bin.desktop" ];
       };
     };
   };
@@ -199,7 +202,7 @@ in
       lazy-nvim
     ];
 
-    extraLuaConfig =
+    initLua =
       let
         plugins = with pkgs.vimPlugins; [
           # Core
@@ -319,6 +322,9 @@ in
       gtk-application-prefer-dark-theme = true;
     };
   };
+
+  # Re-activate home-manager on login to ensure symlinks survive GC
+  systemd.user.startServices = "sd-switch";
 
   # ── Systemd user units ──────────────────────────────────────────────
   systemd.user = {
@@ -474,6 +480,32 @@ in
           RestartSec = 5;
         };
         Install.WantedBy = [ "default.target" ];
+      };
+
+      dehox = {
+        Unit = {
+          Description = "Dehox OpenVPN";
+          After = [ "network.target" ];
+        };
+        Service = {
+          Type = "simple";
+          ExecStart = "${openvpnBin} /etc/openvpn/dehox.ovpn";
+          SyslogIdentifier = "dehox";
+        };
+        Install.WantedBy = [ "sway-session.target" ];
+      };
+
+      devment = {
+        Unit = {
+          Description = "Devment OpenVPN";
+          After = [ "network.target" ];
+        };
+        Service = {
+          Type = "simple";
+          ExecStart = "${openvpnBin} /etc/openvpn/devment.ovpn";
+          SyslogIdentifier = "devment";
+        };
+        Install.WantedBy = [ "sway-session.target" ];
       };
 
       loctok = {

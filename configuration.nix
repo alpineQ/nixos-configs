@@ -400,7 +400,6 @@ in
 
       # Office / productivity
       libreoffice-qt
-      keepassxc
       firefox-bin
       chromium
       telegram-desktop
@@ -442,6 +441,7 @@ in
 
       # Misc
       graphviz
+      unzip
       upx
       enchant
 

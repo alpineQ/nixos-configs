@@ -73,6 +73,15 @@ in
       plugins = with pkgs; [
         networkmanager-openvpn
       ];
+      dispatcherScripts = [{
+        source = pkgs.writeText "disable-ipv6" ''
+          #!/bin/sh
+          if [ "$2" = "up" ] || [ "$2" = "connectivity-change" ]; then
+            sysctl -w "net.ipv6.conf.$1.disable_ipv6=1"
+          fi
+        '';
+        type = "basic";
+      }];
     };
 
     extraHosts = ''

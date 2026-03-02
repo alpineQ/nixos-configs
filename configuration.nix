@@ -73,15 +73,15 @@ in
       plugins = with pkgs; [
         networkmanager-openvpn
       ];
-      dispatcherScripts = [{
-        source = pkgs.writeText "disable-ipv6" ''
-          #!/bin/sh
-          if [ "$2" = "up" ] || [ "$2" = "connectivity-change" ]; then
-            sysctl -w "net.ipv6.conf.$1.disable_ipv6=1"
-          fi
-        '';
-        type = "basic";
-      }];
+      ensureProfiles.profiles.wired = {
+        connection = {
+          id = "Wired connection 1";
+          type = "802-3-ethernet";
+          interface-name = "enp12s0";
+        };
+        ipv4.method = "auto";
+        ipv6.method = "disabled";
+      };
     };
 
     extraHosts = ''

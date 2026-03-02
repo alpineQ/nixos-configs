@@ -25,6 +25,8 @@ in
   imports = [
     ./hardware-configuration.nix
     ./pc.nix
+    ./gaming.nix
+    ./proton-compat-mounts.nix
     "${builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/release-25.11.tar.gz"}/nixos"
   ];
 
@@ -87,6 +89,8 @@ in
       # DEHOX
       10.84.0.100     src.dehox.com
       10.84.0.1       files.dehox.com
+
+      193.106.150.249 m1kfkne.srv
     '';
   };
 

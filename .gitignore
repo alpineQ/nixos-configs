@@ -1,1 +1,2 @@
 *.iso
+/proton-compat-mounts.nix

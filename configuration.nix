@@ -206,6 +206,12 @@ in
     '';
   };
 
+  # ── Docker CLI plugins (workaround for compose not finding buildx) ──
+  systemd.tmpfiles.rules = [
+    "d /usr/local/libexec/docker/cli-plugins 0755 root root -"
+    "L /usr/local/libexec/docker/cli-plugins/docker-buildx - - - - ${pkgs.docker-buildx}/libexec/docker/cli-plugins/docker-buildx"
+  ];
+
   # ── Display / Sway ───────────────────────────────────────────────────
   xdg.portal = {
     enable = true;

@@ -224,13 +224,24 @@
     nix-ld.enable = true;
 
     git.enable = true;
+
+    wireshark.enable = true;
   };
 
   # ── Security ─────────────────────────────────────────────────────────
   security = {
     rtkit.enable = true;
     sudo.enable = true;
-    polkit.enable = true;
+    polkit = {
+      enable = true;
+      extraConfig = ''
+        polkit.addRule(function(action, subject) {
+          if (subject.isInGroup("wheel")) {
+            return polkit.Result.AUTH_ADMIN_KEEP;
+          }
+        });
+      '';
+    };
     wrappers.openvpn = {
       source = "${pkgs.openvpn}/bin/openvpn";
       capabilities = "cap_net_admin+ep";
@@ -256,6 +267,7 @@
       "docker"
       "networkmanager"
       "libvirtd"
+      "wireshark"
     ];
   };
 
@@ -307,7 +319,6 @@
 
       # Networking
       nmap
-      wireshark
       ethtool
       openvpn
       networkmanager-openvpn

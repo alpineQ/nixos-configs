@@ -258,24 +258,28 @@ in
     sudo.enable = true;
     polkit = {
       enable = true;
-      extraConfig = ''
-        polkit.addRule(function(action, subject) {
-          if ((action.id === "org.freedesktop.login1.power-off" ||
-               action.id === "org.freedesktop.login1.power-off-multiple-sessions" ||
-               action.id === "org.freedesktop.login1.reboot" ||
-               action.id === "org.freedesktop.login1.reboot-multiple-sessions" ||
-               action.id === "org.freedesktop.login1.suspend" ||
-               action.id === "org.freedesktop.login1.suspend-multiple-sessions") &&
-              subject.isInGroup("wheel")) {
-            return polkit.Result.YES;
-          }
-        });
-        polkit.addRule(function(action, subject) {
-          if (subject.isInGroup("wheel")) {
-            return polkit.Result.AUTH_ADMIN_KEEP;
-          }
-        });
-      '';
+      extraConfig = lib.mkMerge [
+        ''
+          polkit.addRule(function(action, subject) {
+            if ((action.id === "org.freedesktop.login1.power-off" ||
+                 action.id === "org.freedesktop.login1.power-off-multiple-sessions" ||
+                 action.id === "org.freedesktop.login1.reboot" ||
+                 action.id === "org.freedesktop.login1.reboot-multiple-sessions" ||
+                 action.id === "org.freedesktop.login1.suspend" ||
+                 action.id === "org.freedesktop.login1.suspend-multiple-sessions") &&
+                subject.isInGroup("wheel")) {
+              return polkit.Result.YES;
+            }
+          });
+        ''
+        (lib.mkAfter ''
+          polkit.addRule(function(action, subject) {
+            if (subject.isInGroup("wheel")) {
+              return polkit.Result.AUTH_ADMIN_KEEP;
+            }
+          });
+        '')
+      ];
     };
     wrappers.openvpn = {
       source = "${pkgs.openvpn}/bin/openvpn";

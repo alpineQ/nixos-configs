@@ -206,6 +206,16 @@ in
     '';
   };
 
+  # ── Kernel headers for out-of-tree module builds ────────────────────
+  system.activationScripts.kernelDevHeaders =
+    let
+      kernelDev = config.boot.kernelPackages.kernel.dev;
+      modDirVersion = config.boot.kernelPackages.kernel.modDirVersion;
+    in ''
+      mkdir -p /lib/modules/${modDirVersion}
+      ln -sfn ${kernelDev}/lib/modules/${modDirVersion}/build /lib/modules/${modDirVersion}/build
+    '';
+
   # ── Docker CLI plugins (workaround for compose not finding buildx) ──
   systemd.tmpfiles.rules = [
     "d /usr/local/libexec/docker/cli-plugins 0755 root root -"
@@ -355,6 +365,8 @@ in
       nodejs
       github-cli
       lazygit
+      gnumake
+      llvm
       ccache
       perf
       luarocks
@@ -365,6 +377,7 @@ in
       gopls
       sqlite
       glibc.static
+      libbpf
 
       # Containers / VM
       qemu_full
@@ -481,6 +494,7 @@ in
       XCURSOR_THEME = "Dracula-cursors";
       XCURSOR_SIZE = "24";
       LIBRARY_PATH = "${pkgs.glibc.static}/lib";
+      C_INCLUDE_PATH = "${pkgs.libbpf}/include";
     };
   };
 

@@ -17,6 +17,13 @@ let
     ln -s ${tree-sitter-vim-fixed}/parser $out/parser/vim.so
   '';
 
+  unstable = import (fetchTarball "https://nixos.org/channels/nixos-unstable/nixexprs.tar.xz") {
+    config.allowUnfree = true;
+  };
+
+  unstableVim = unstable.vimPlugins;
+  nvim-treesitter-unstable = unstableVim.nvim-treesitter;
+
   isNixOS = builtins.pathExists /etc/NIXOS;
   openvpnBin = if isNixOS then "/run/wrappers/bin/openvpn" else "/usr/sbin/openvpn";
 in
@@ -138,7 +145,7 @@ in
         let
           parsers = pkgs.symlinkJoin {
             name = "treesitter-parsers";
-            paths = (pkgs.vimPlugins.nvim-treesitter.withPlugins (p: with p; [
+            paths = (nvim-treesitter-unstable.withPlugins (p: with p; [
               bash c cpp css diff go html javascript json lua luadoc
               markdown markdown-inline nix python query regex rust
               toml tsx typescript vimdoc xml yaml
@@ -217,7 +224,7 @@ in
       let
         plugins = with pkgs.vimPlugins; [
           # Core
-          LazyVim
+          unstableVim.LazyVim
 
           # UI
           snacks-nvim
@@ -254,13 +261,13 @@ in
           ts-comments-nvim
 
           # Treesitter
-          (pkgs.vimPlugins.nvim-treesitter.withPlugins (p: with p; [
+          (nvim-treesitter-unstable.withPlugins (p: with p; [
             bash c cpp css diff go html javascript json lua luadoc
             markdown markdown-inline nix python query regex rust
             toml tsx typescript vimdoc xml yaml
           ]))
-          nvim-treesitter-textobjects
-          nvim-ts-autotag
+          unstableVim.nvim-treesitter-textobjects
+          unstableVim.nvim-ts-autotag
 
           # Telescope
           telescope-nvim

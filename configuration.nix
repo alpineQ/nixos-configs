@@ -1,5 +1,26 @@
 { config, pkgs, lib, ... }:
 
+let
+  tree-sitter-latest = pkgs.tree-sitter.overrideAttrs (old: rec {
+    version = "0.26.6";
+    src = pkgs.fetchFromGitHub {
+      owner = "tree-sitter";
+      repo = "tree-sitter";
+      tag = "v${version}";
+      hash = "sha256-ZtzwhEmNZg5brghKNiTRZSmY8FwQeWcemY2blq9j2GM=";
+      fetchSubmodules = true;
+    };
+    cargoDeps = pkgs.rustPlatform.fetchCargoVendor {
+      inherit src;
+      name = "tree-sitter-${version}-vendor.tar.gz";
+      hash = "sha256-u6RmwNR4QVwyuij5RlHTLC5lNNQpWMVrlQwfwF78pYc=";
+    };
+    patches = [];
+    nativeBuildInputs = (old.nativeBuildInputs or []) ++ [ pkgs.libclang ];
+    LIBCLANG_PATH = "${pkgs.libclang.lib}/lib";
+    BINDGEN_EXTRA_CLANG_ARGS = "-isystem ${pkgs.glibc.dev}/include -isystem ${pkgs.libclang.lib}/lib/clang/${lib.versions.major pkgs.libclang.version}/include";
+  });
+in
 {
   imports = [
     ./hardware-configuration.nix
@@ -294,7 +315,7 @@
       # Dev tools
       rustup
       gcc
-      tree-sitter
+      tree-sitter-latest
       clang
       clang-tools
       nodejs

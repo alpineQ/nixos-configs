@@ -26,7 +26,6 @@ in
     ./hardware-configuration.nix
     ./pc.nix
     ./gaming.nix
-    ./proton-compat-mounts.nix
     "${builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/release-25.11.tar.gz"}/nixos"
   ];
 

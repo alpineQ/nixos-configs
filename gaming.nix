@@ -1,5 +1,25 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
+let
+  steamAppsDir = "/mnt/data4/SteamLibrary/steamapps";
+  compatBase = "/home/alpineq/.proton-compat";
+
+  dirEntries = builtins.readDir steamAppsDir;
+
+  appIds = lib.concatMap (name:
+    let m = builtins.match "appmanifest_([0-9]+)\\.acf" name;
+    in if m != null then m else []
+  ) (builtins.attrNames dirEntries);
+
+  mkCompatMount = appId: {
+    name = "${steamAppsDir}/compatdata/${appId}";
+    value = {
+      device = "${compatBase}/${appId}";
+      fsType = "none";
+      options = [ "bind" "nofail" ];
+    };
+  };
+in
 {
   programs = {
     steam = {
@@ -33,6 +53,14 @@
 
   # Udev rules for Steam/Xbox/PS controllers
   hardware.steam-hardware.enable = true;
+
+  # Bind-mount Proton compatdata from ext4 over exFAT so Wine prefixes
+  # get proper symlink and permission support.
+  fileSystems = builtins.listToAttrs (map mkCompatMount appIds);
+
+  system.activationScripts.protonCompat = lib.concatMapStringsSep "\n"
+    (appId: "mkdir -p ${compatBase}/${appId}")
+    appIds;
 
   environment.systemPackages = with pkgs; [
     mangohud

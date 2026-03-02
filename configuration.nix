@@ -436,6 +436,23 @@ in
       (python3.withPackages (ps: [ ps.requests ]))
     ];
 
+    etc."xdg/gtk-3.0/settings.ini".text = ''
+      [Settings]
+      gtk-theme-name=Dracula
+      gtk-icon-theme-name=Dracula
+      gtk-cursor-theme-name=Dracula-cursors
+      gtk-application-prefer-dark-theme=true
+      gtk-font-name=Roboto 11
+    '';
+
+    etc."xdg/gtk-4.0/settings.ini".text = ''
+      [Settings]
+      gtk-icon-theme-name=Dracula
+      gtk-cursor-theme-name=Dracula-cursors
+      gtk-application-prefer-dark-theme=true
+      gtk-font-name=Roboto 11
+    '';
+
     sessionVariables = {
       MOZ_ENABLE_WAYLAND = "1";
       QT_QPA_PLATFORM = "wayland";

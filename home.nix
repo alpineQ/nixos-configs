@@ -335,23 +335,6 @@ in
     '';
   };
 
-  # ── GTK theming ─────────────────────────────────────────────────────
-  gtk = {
-    enable = true;
-    theme.name = "Dracula";
-    iconTheme.name = "Dracula";
-    cursorTheme.name = "Dracula-cursors";
-    font = {
-      name = "Roboto";
-      size = 11;
-    };
-    gtk3.extraConfig = {
-      gtk-application-prefer-dark-theme = true;
-    };
-    gtk4.extraConfig = {
-      gtk-application-prefer-dark-theme = true;
-    };
-  };
 
   # Re-activate home-manager on login to ensure symlinks survive GC
   systemd.user.startServices = "sd-switch";

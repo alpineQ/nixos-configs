@@ -39,7 +39,7 @@ let
     value = {
       device = "/home/alpineq/.proton-compat/${appId}";
       fsType = "none";
-      options = [ "bind" ];
+      options = [ "bind" "nofail" ];
     };
   };
 

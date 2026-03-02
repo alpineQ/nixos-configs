@@ -196,13 +196,24 @@ in
 
       # Formatters
       stylua
+      tree-sitter
+      gotools
+      gofumpt
+
+      # Linters
+      golangci-lint
+
+      # Go tools
+      gomodifytags
+      impl
+      delve
     ];
 
     plugins = with pkgs.vimPlugins; [
       lazy-nvim
     ];
 
-    initLua =
+    extraLuaConfig =
       let
         plugins = with pkgs.vimPlugins; [
           # Core
@@ -259,6 +270,16 @@ in
           tokyonight-nvim
           catppuccin-nvim
 
+          # Go
+          neotest
+          neotest-golang
+          nvim-dap
+          nvim-dap-go
+          none-ls-nvim
+
+          # Claude Code
+          claudecode-nvim
+
           # Misc
           plenary-nvim
           persistence-nvim
@@ -280,6 +301,8 @@ in
           },
           spec = {
             { "LazyVim/LazyVim", import = "lazyvim.plugins" },
+            { import = "lazyvim.plugins.extras.ai.claudecode" },
+            { import = "lazyvim.plugins.extras.lang.go" },
             { import = "plugins" },
           },
           performance = {

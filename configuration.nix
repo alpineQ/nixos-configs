@@ -297,6 +297,7 @@
       go
       gopls
       sqlite
+      glibc.static
 
       # Containers / VM
       qemu_full
@@ -396,6 +397,7 @@
       XDG_CURRENT_DESKTOP = "sway";
       XCURSOR_THEME = "Dracula-cursors";
       XCURSOR_SIZE = "24";
+      LIBRARY_PATH = "${pkgs.glibc.static}/lib";
     };
   };
 

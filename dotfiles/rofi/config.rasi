@@ -1,3 +1,7 @@
+configuration {
+modes: [ window, drun, run, ssh, combi ];
+combi-modes: [ drun, run ];
+}
 * {
 lightbg: #141a1b;
 background: #141a1b;

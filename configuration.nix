@@ -237,6 +237,7 @@ in
     sway = {
       enable = true;
       wrapperFeatures.gtk = true;
+      xwayland.enable = false;
       extraPackages = with pkgs; [
         swaylock-effects
         swayidle

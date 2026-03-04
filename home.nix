@@ -48,6 +48,16 @@ in
       '';
     };
 
+    file.".local/bin/sway-logout" = {
+      executable = true;
+      text = ''
+        #!/bin/sh
+        swaymsg -t exit
+        systemctl --user stop graphical-session.target
+        loginctl terminate-session "$XDG_SESSION_ID"
+      '';
+    };
+
     file.".local/bin/inhibit-idle" = {
       executable = true;
       text = ''

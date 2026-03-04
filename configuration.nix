@@ -416,7 +416,9 @@ in
       # Media
       ffmpeg-full
       ffmpegthumbnailer
-      vlc
+      (vlc.overrideAttrs (old: {
+        buildInputs = old.buildInputs ++ [ dav1d ];
+      }))
       imagemagick
       speex
 

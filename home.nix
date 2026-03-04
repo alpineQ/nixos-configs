@@ -219,6 +219,7 @@ in
 
       # Linters
       golangci-lint
+      markdownlint-cli2
 
       # Go tools
       gomodifytags
@@ -297,6 +298,10 @@ in
           # Claude Code
           claudecode-nvim
 
+          # Markdown
+          render-markdown-nvim
+          markdown-preview-nvim
+
           # Misc
           plenary-nvim
           persistence-nvim
@@ -320,6 +325,7 @@ in
             { "LazyVim/LazyVim", import = "lazyvim.plugins" },
             { import = "lazyvim.plugins.extras.ai.claudecode" },
             { import = "lazyvim.plugins.extras.lang.go" },
+            { import = "lazyvim.plugins.extras.lang.markdown" },
             { import = "plugins" },
           },
           performance = {

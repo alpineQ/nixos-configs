@@ -422,6 +422,7 @@ in
       firefox-bin
       chromium
       telegram-desktop
+      discord
       qbittorrent
 
       # Wayland / desktop utilities
@@ -461,6 +462,7 @@ in
       # Misc
       graphviz
       unzip
+      unixtools.xxd
       upx
       enchant
 

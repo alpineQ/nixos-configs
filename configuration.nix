@@ -360,7 +360,10 @@ in
       parallel
 
       # Dev tools
-      rustup
+      cargo
+      rustc
+      rustfmt
+      clippy
       gcc
       tree-sitter-latest
       clang

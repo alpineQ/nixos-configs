@@ -396,6 +396,8 @@ in
       pkg-config
       libpcap
       pcre.dev
+      nss.tools
+      openssl
 
       # Containers / VM
       qemu_full
@@ -406,6 +408,7 @@ in
       # Networking
       nmap
       ethtool
+      tcpreplay
       openvpn
       networkmanager-openvpn
       kcat

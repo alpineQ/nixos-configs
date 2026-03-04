@@ -49,6 +49,7 @@ in
       "quiet"
       "console=tty1"
       "loglevel=4"
+      "usbcore.autosuspend=-1" # MT7925 BT firmware breaks on USB autosuspend wakeup
     ];
 
     # Modules matching your Gentoo kernel config
@@ -203,6 +204,9 @@ in
 
       # Android device access (Asus Zenfone)
       SUBSYSTEM=="usb", ATTR{idVendor}=="0b05", MODE="0660", GROUP="plugdev"
+
+      # Disable USB autosuspend for MediaTek MT7925 Bluetooth (broken firmware wakeup handling)
+      ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="0e8d", ATTR{idProduct}=="0717", ATTR{power/autosuspend}="-1"
     '';
   };
 

@@ -224,6 +224,7 @@ in
   systemd.tmpfiles.rules = [
     "d /usr/local/libexec/docker/cli-plugins 0755 root root -"
     "L /usr/local/libexec/docker/cli-plugins/docker-buildx - - - - ${pkgs.docker-buildx}/libexec/docker/cli-plugins/docker-buildx"
+    "L /root/go - - - - /home/alpineq/go"
   ];
 
   # ── Display / Sway ───────────────────────────────────────────────────
@@ -284,7 +285,12 @@ in
   # ── Security ─────────────────────────────────────────────────────────
   security = {
     rtkit.enable = true;
-    sudo.enable = true;
+    sudo = {
+      enable = true;
+      extraConfig = ''
+        Defaults env_keep += "PKG_CONFIG_PATH CGO_CFLAGS CGO_LDFLAGS"
+      '';
+    };
     polkit = {
       enable = true;
       extraConfig = lib.mkMerge [
@@ -384,6 +390,9 @@ in
       sqlite
       glibc.static
       libbpf
+      pkg-config
+      libpcap
+      pcre.dev
 
       # Containers / VM
       qemu_full
@@ -475,6 +484,10 @@ in
       playerctl
       (python3.withPackages (ps: [ ps.requests ]))
     ];
+
+    variables.PKG_CONFIG_PATH = "/run/current-system/sw/lib/pkgconfig";
+    variables.CGO_CFLAGS = "-I${pkgs.libpcap}/include -I${pkgs.pcre.dev}/include";
+    variables.CGO_LDFLAGS = "-L${pkgs.libpcap.lib}/lib -L${pkgs.pcre.out}/lib";
 
     etc."xdg/gtk-3.0/settings.ini".text = ''
       [Settings]

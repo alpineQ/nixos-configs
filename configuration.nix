@@ -279,7 +279,10 @@ in
 
     git.enable = true;
 
-    wireshark.enable = true;
+    wireshark = {
+      enable = true;
+      package = pkgs.wireshark; # Qt GUI (includes CLI tools)
+    };
   };
 
   # ── Security ─────────────────────────────────────────────────────────

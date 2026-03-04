@@ -59,7 +59,7 @@ in
   fileSystems = builtins.listToAttrs (map mkCompatMount appIds);
 
   system.activationScripts.protonCompat = lib.concatMapStringsSep "\n"
-    (appId: "mkdir -p ${compatBase}/${appId}")
+    (appId: "mkdir -p ${compatBase}/${appId} && chown alpineq:alpineq ${compatBase}/${appId}")
     appIds;
 
   environment.systemPackages = with pkgs; [

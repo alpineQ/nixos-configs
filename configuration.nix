@@ -440,8 +440,9 @@ in
          profile = ''
            export GIO_MODULE_DIR="${pkgs.glib-networking}/lib/gio/modules/"
            export SSL_CERT_FILE="${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
+           export GTK_THEME=Dracula
          '';
-         extraPkgs = pkgs: [ pkgs.webkitgtk_4_1 ];
+         extraPkgs = pkgs: [ pkgs.webkitgtk_4_1 pkgs.dracula-theme ];
       })
 
       # Office / productivity

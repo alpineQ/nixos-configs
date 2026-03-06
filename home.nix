@@ -546,7 +546,10 @@ in
           Type = "simple";
           WorkingDirectory = "/home/alpineq/projects/loctok";
           ExecStart = "/home/alpineq/projects/loctok/target/release/loctok-server --config config.toml";
-          Environment = "RUST_LOG=loctok_server=info";
+          Environment = [
+            "RUST_LOG=loctok_server=info"
+            "PATH=/run/current-system/sw/bin:/usr/bin:/bin"
+          ];
           Restart = "on-failure";
           RestartSec = 3;
         };

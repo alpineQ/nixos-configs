@@ -437,6 +437,10 @@ in
            url = "https://github.com/bambulab/BambuStudio/releases/download/v02.05.00.67/Bambu_Studio_ubuntu-24.04_PR-9540.AppImage";
            hash = "sha256-3ubZblrsOJzz1p34QiiwiagKaB7nI8xDeadFWHBkWfg=";
          };
+         profile = ''
+           export GIO_MODULE_DIR="${pkgs.glib-networking}/lib/gio/modules/"
+           export SSL_CERT_FILE="${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
+         '';
          extraPkgs = pkgs: [ pkgs.webkitgtk_4_1 ];
       })
 

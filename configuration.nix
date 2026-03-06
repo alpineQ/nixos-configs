@@ -98,8 +98,6 @@ in
       # DEHOX
       10.84.0.100     src.dehox.com
       10.84.0.1       files.dehox.com
-
-      193.106.150.249 m1kfkne.srv
     '';
   };
 
@@ -281,7 +279,15 @@ in
 
     wireshark = {
       enable = true;
-      package = pkgs.wireshark; # Qt GUI (includes CLI tools)
+      package = pkgs.symlinkJoin {
+        name = "wireshark-wrapped";
+        paths = [ pkgs.wireshark ];
+        nativeBuildInputs = [ pkgs.makeWrapper ];
+        postBuild = ''
+          wrapProgram $out/bin/wireshark \
+            --prefix LD_LIBRARY_PATH : "${pkgs.pipewire}/lib"
+        '';
+      };
     };
   };
 

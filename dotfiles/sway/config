@@ -42,6 +42,8 @@ input * {
 #
     # Start a terminal
     bindsym $mod+Return exec $term
+    bindsym $mod+b exec firefox
+    bindsym $mod+semicolon exec pcmanfm
 
     # Kill focused window
     bindsym $mod+Shift+q kill

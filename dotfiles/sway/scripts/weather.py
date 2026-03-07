@@ -83,6 +83,7 @@ except (
     requests.exceptions.HTTPError,
     requests.exceptions.ConnectionError,
     requests.exceptions.Timeout,
+    requests.exceptions.JSONDecodeError,
 ) as err:
     print(str(err))
     sys.exit(1)

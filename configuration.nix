@@ -1,6 +1,15 @@
 { config, pkgs, lib, ... }:
 
 let
+  fenix = import (fetchTarball "https://github.com/nix-community/fenix/archive/main.tar.gz") { };
+  rust-toolchain = fenix.combine [
+    fenix.stable.cargo
+    fenix.stable.rustc
+    fenix.stable.rustfmt
+    fenix.stable.clippy
+    fenix.targets.x86_64-unknown-linux-musl.stable.rust-std
+  ];
+
   tree-sitter-latest = pkgs.tree-sitter.overrideAttrs (old: rec {
     version = "0.26.6";
     src = pkgs.fetchFromGitHub {
@@ -375,11 +384,9 @@ in
       parallel
 
       # Dev tools
-      cargo
-      rustc
-      rustfmt
-      clippy
+      rust-toolchain
       gcc
+      musl
       tree-sitter-latest
       clang
       clang-tools

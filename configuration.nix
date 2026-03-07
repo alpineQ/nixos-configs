@@ -429,7 +429,7 @@ in
       speex
 
       # 3D printing / CAD
-      openscad
+      openscad-unstable
       (pkgs.appimageTools.wrapType2 {
          pname = "bambu-studio";
          version = "PR-9540";

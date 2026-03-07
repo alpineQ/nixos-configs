@@ -58,6 +58,14 @@ in
       '';
     };
 
+    file.".cargo/config.toml".text = ''
+      [target.x86_64-unknown-linux-musl]
+      linker = "x86_64-unknown-linux-musl-gcc"
+
+      [env]
+      CC_x86_64_unknown_linux_musl = "x86_64-unknown-linux-musl-gcc"
+    '';
+
     file.".local/bin/inhibit-idle" = {
       executable = true;
       text = ''

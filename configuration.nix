@@ -387,6 +387,7 @@ in
       rust-toolchain
       gcc
       musl
+      pkgsCross.musl64.stdenv.cc
       tree-sitter-latest
       clang
       clang-tools
